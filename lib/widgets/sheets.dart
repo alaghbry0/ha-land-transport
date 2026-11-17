@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../theme/ha_theme.dart';
@@ -73,7 +71,10 @@ class HaBottomSheet extends StatelessWidget {
   }
 }
 
-/// شريط علوي عائم زجاجي (Blur) فوق الخريطة — يستضيف مبدل الوضع.
+/// شريط علوي عائم فوق الخريطة — يستضيف مبدل الوضع.
+///
+/// ملاحظة ويب: BackdropFilter كان يمنع hit-testing في متصفح Chromium
+/// فوق الشريط، فاستُبدل بلون كحلي شبه معتم صلب بنفس المظهر.
 class FloatingTopBar extends StatelessWidget {
   const FloatingTopBar({super.key, required this.child});
 
@@ -89,23 +90,24 @@ class FloatingTopBar extends StatelessWidget {
         bottom: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(18),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                decoration: BoxDecoration(
-                  color: HaColors.navy.withValues(alpha: 0.82),
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.08),
-                  ),
-                ),
-                child: child,
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: HaColors.navy.withValues(alpha: 0.94),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.08),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: HaColors.navy.withValues(alpha: 0.35),
+                  blurRadius: 24,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
+            child: child,
           ),
         ),
       ),

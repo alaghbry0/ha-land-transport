@@ -20,7 +20,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-FLUTTER_BIN="${FLUTTER_BIN:-/home/z/flutter/bin/flutter}"
+FLUTTER_BIN="${FLUTTER_BIN:-/home/z/my-project/flutter/bin/flutter}"
 
 BASE_HREF="/flutter/"
 BUILD_MODE="debug"

@@ -75,65 +75,74 @@ class _HomeShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final service = AppService.instance;
-
-    return Scaffold(
-      body: Stack(
-        children: [
-          // الخلفية: شاشة الوضع النشط (تحتوي الخريطة كاملة الشاشة)
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 450),
-            switchInCurve: Curves.easeOutCubic,
-            switchOutCurve: Curves.easeInCubic,
-            transitionBuilder: (child, anim) => FadeTransition(
-              opacity: anim,
-              child: ScaleTransition(
-                scale: anim.drive(Tween<double>(begin: 0.97, end: 1.0)),
-                child: child,
+    return ListenableBuilder(
+      listenable: service,
+      builder: (context, _) {
+        return Scaffold(
+          body: Stack(
+            children: [
+              // الخلفية: شاشة الوضع النشط (تحتوي الخريطة كاملة الشاشة)
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 450),
+                switchInCurve: Curves.easeOutCubic,
+                switchOutCurve: Curves.easeInCubic,
+                transitionBuilder: (child, anim) => FadeTransition(
+                  opacity: anim,
+                  child: ScaleTransition(
+                    scale: anim.drive(Tween<double>(begin: 0.97, end: 1.0)),
+                    child: child,
+                  ),
+                ),
+                child: service.role == AppRole.passenger
+                    ? const PassengerShell(key: ValueKey('passenger'))
+                    : service.currentCaptain == null
+                        ? const CaptainLoginScreen(
+                            key: ValueKey('captain-login'))
+                        : CaptainShell(
+                            key: ValueKey(
+                                'captain-${service.currentCaptain!.id}')),
               ),
-            ),
-            child: service.role == AppRole.passenger
-                ? const PassengerShell(key: ValueKey('passenger'))
-                : service.currentCaptain == null
-                    ? const CaptainLoginScreen(key: ValueKey('captain-login'))
-                    : CaptainShell(key: ValueKey('captain-${service.currentCaptain!.id}')),
-          ),
 
-          // الشريط العلوي العائم: مبدل الوضع الفوري
-          FloatingTopBar(
-            child: Row(
-              children: [
-                const HaLogoBadge(),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    service.role == AppRole.passenger
-                        ? 'HA للنقل البري'
-                        : 'HA — لوحة الكابتن',
-                    style: const TextStyle(
-                      fontFamily: 'IBM Plex Sans Arabic',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+              // الشريط العلوي العائم: مبدل الوضع الفوري
+              FloatingTopBar(
+                child: Row(
+                  children: [
+                    const HaLogoBadge(),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        service.role == AppRole.passenger
+                            ? 'HA للنقل البري'
+                            : 'HA — لوحة الكابتن',
+                        style: const TextStyle(
+                          fontFamily: 'IBM Plex Sans Arabic',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
+                    RoleSwitcher(
+                      current: service.role == AppRole.passenger
+                          ? Role.passenger
+                          : Role.captain,
+                      onChanged: (role) => service.switchRole(
+                        role == Role.passenger
+                            ? AppRole.passenger
+                            : AppRole.captain,
+                      ),
+                      badge: service.role != AppRole.captain &&
+                              service.incomingRide != null
+                          ? 1
+                          : null,
+                    ),
+                  ],
                 ),
-                RoleSwitcher(
-                  current: service.role == AppRole.passenger
-                      ? Role.passenger
-                      : Role.captain,
-                  onChanged: (role) => service.switchRole(
-                    role == Role.passenger ? AppRole.passenger : AppRole.captain,
-                  ),
-                  badge: service.role != AppRole.captain &&
-                          service.incomingRide != null
-                      ? 1
-                      : null,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
