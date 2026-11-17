@@ -1,4 +1,4 @@
-This is a pure-SDK Flutter application — adaptive Material 3 UI, zero third-party dependencies, engineered to be previewed interactively from AI-agent sandboxes. Prioritize the zero-dependency promise and analyzer cleanliness over convenience.
+تطبيق «HA للنقل البري» — نموذج أولي تفاعلي (راكب/كابتن) بخريطة OSM، مبني على قالب flutter-sandbox-template. الأولوية: تحليل نظيف وواجهة عربية RTL سليمة.
 
 ## Project overview
 
